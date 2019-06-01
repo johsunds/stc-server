@@ -7,9 +7,8 @@ name = "pypi"
 
 [packages]
 
-flask = "*"
+Flask = "*"
 requests = "*"
-pyopenssl = "*"
 
 
 [dev-packages]
