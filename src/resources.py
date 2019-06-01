@@ -29,7 +29,11 @@ class BTTVEmotes(Resource):
             response = get(self.CHANNEL_ENDPOINT.format(self.channel), timeout=self.timeout)
 
         parsed_json = json.loads(response.content)
-        return {emote["code"]: self.EMOTE_URL.format(emote["id"]) for emote in parsed_json["emotes"]}
+        result = {}
+        for emote in parsed_json["emotes"]:
+            result[emote["code"]] = {"url": self.EMOTE_URL.format(emote["id"]), "src": "bttv",
+                                     "scope": "global" if self.channel is None else "channel"}
+        return result
 
 
 class FFZEmotes(Resource):
@@ -48,8 +52,9 @@ class FFZEmotes(Resource):
         for emote_set in sets:
             emotes = sets[emote_set]["emoticons"]
             for emote in emotes:
-                url = "https:{}".format(emote['urls']['1'])
-                response[emote['name']] = url
+                url = "https:{}".format(emote["urls"]["1"])
+                response[emote["name"]] = {"url": url, "src": "ffz",
+                                           "scope": "global" if self.channel is None else "channel"}
         return response
 
 
@@ -57,9 +62,10 @@ class TwitchBadges(Resource):
     GLOBAL_ENDPOINT = "https://badges.twitch.tv/v1/badges/global/display?language=en"
     CHANNEL_ENDPOINT = "https://badges.twitch.tv/v1/badges/channels/{}/display?language=en"
 
-    def __init__(self, channel, *args, **kwargs):
+    def __init__(self, channel, channel_ids, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.channel = channel
+        self.channel_ids = channel_ids
 
     def _renew_resource(self):
         new_resource = {}
@@ -72,16 +78,16 @@ class TwitchBadges(Resource):
                 for version in versions:
                     url = versions[version]["image_url_1x"]
                     name = "{}/{}".format(badge, version)
-                    new_resource[name] = url
+                    new_resource[name] = {"url": url, "src": "twitch", "scope": "global"}
             return new_resource
         else:
-            if self.channel not in channel_ids.ids:
-                channel_ids.add(self.channel)
+            if self.channel not in self.channel_ids.ids:
+                self.channel_ids.add(self.channel)
 
-            if self.channel not in channel_ids.ids:
+            if self.channel not in self.channel_ids.ids:
                 return {}
 
-            response = get(self.CHANNEL_ENDPOINT.format(channel_ids.ids[self.channel]))
+            response = get(self.CHANNEL_ENDPOINT.format(self.channel_ids.ids[self.channel]))
 
             parsed_json = json.loads(response.content)
             if not parsed_json["badge_sets"]:
@@ -91,7 +97,8 @@ class TwitchBadges(Resource):
             for version in versions:
                 url = versions[version]["image_url_1x"]
                 name = "{}/{}".format(self.channel.lower(), version)
-                new_resource[name] = url
+                new_resource[name] = {"url": url, "src": "twitch",
+                                      "scope": "channel"}
             return new_resource
 
 
@@ -115,11 +122,3 @@ class TwitchIds:
         except requests.exceptions.RequestException:
             return {}
 
-
-resources = {"bttv": {"emotes": BTTVEmotes},
-             "ffz": {"emotes": FFZEmotes},
-             "twitch": {"badges": TwitchBadges, "ids": TwitchIds}}
-
-cache = ResourceCache()
-
-channel_ids = TwitchIds()

@@ -11,6 +11,7 @@ class ResourceCache:
 
     def add_resource(self, resource):
         self.resources[resource.name] = resource
+        return self[resource.name]
 
     def __getitem__(self, name):
         resource = self.resources[name]
@@ -28,7 +29,8 @@ class Resource:
     TIME_DAY = 86400
     TIME_HOUR = 3600
 
-    def __init__(self, name, lifetime=TIME_HOUR / 2, max_retry=3, retry_window=TIME_HOUR / 2, timeout=2):
+    def __init__(self, name, lifetime=TIME_HOUR / 2, max_retry=3, retry_window=TIME_HOUR / 2, timeout=2, *args,
+                 **kwargs):
         self.name = name
         self.lifetime = lifetime
         self.content = {}
