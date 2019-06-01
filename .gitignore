@@ -1,23 +1,5 @@
-Skip to content
- 
-Search or jump to…
+ï»¿stc-server/
 
-Pull requests
-Issues
-Marketplace
-Explore
- 
-@johsunds 
-2,783
-84,523 41,313 github/gitignore
-lines 5717
- Code  Pull requests 87  Projects 0  Security  Insights
-gitignore/Python.gitignore
-@captainpete captainpete Add db.sqlite3-journal to Python.gitignore (#3063)
-c1faae4 6 days ago
-@arcresu @shiftkey @Lucretiel @Harrison-G @jwg4 @GabrielC101 @Metallicow @misaelnieto @pmsosa @svkampen @vltr @matheussl @hugovk @ghisvail @EvandroLG @DSIW @amigcamel @toanant @2Cubed @brettcannon @weinihou @Visgean @nvie @skuschel @sigo @sethmlarson
-125 lines (101 sloc)  1.67 KB
-    
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -148,7 +130,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-© 2019 GitHub, Inc.
+ï¿½ 2019 GitHub, Inc.
 Terms
 Privacy
 Security

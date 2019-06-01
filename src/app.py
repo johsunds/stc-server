@@ -3,9 +3,6 @@ import logging
 from resources import resources, cache, channel_ids
 from utils import lookup_key_sequence
 
-logging.basicConfig(filename="../server.log", level=logging.DEBUG,
-                    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-
 app = Flask(__name__)
 
 sources = ["twitch", "bttv", "ffz"]
@@ -49,4 +46,6 @@ def get_resource(source, resource_type, channel):
 
 
 if __name__ == "__main__":
+    logging.basicConfig(filename="../server.log", level=logging.DEBUG,
+                        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
     app.run(debug=False)
