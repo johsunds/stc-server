@@ -19,7 +19,7 @@ def lookup_resource(name, resource, channel=None):
                                                                          channel_ids=channel_ids))
 
 
-@app.route("/channel_id/<channel>")
+@app.route("/channel_id/<string:channel>")
 def get_channel_id(channel):
     data = channel_ids.add(channel) if channel not in channel_ids.ids else channel_ids.ids[channel]
     if not data:
@@ -35,7 +35,7 @@ def get_global_resources():
     return jsonify(response), 200
 
 
-@app.route("/channel/<channel>")
+@app.route("/channel/<string:channel>")
 def get_channel_resources(channel):
     bttv_emotes = lookup_resource("bttv_emotes_{}".format(channel), BTTVEmotes, channel)
     ffz_emotes = lookup_resource("ffz_emotes_{}".format(channel), FFZEmotes, channel)
@@ -48,4 +48,4 @@ def get_channel_resources(channel):
 if __name__ == "__main__":
     logging.basicConfig(filename="../server.log", level=logging.DEBUG,
                         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-    app.run(debug=True)
+    app.run(debug=False)
