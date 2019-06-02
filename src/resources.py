@@ -32,7 +32,7 @@ class BTTVEmotes(Resource):
         result = {}
         for emote in parsed_json["emotes"]:
             result[emote["code"]] = {"url": self.EMOTE_URL.format(emote["id"]), "src": "bttv",
-                                     "scope": "global" if self.channel is None else "channel"}
+                                     "channel": "" if self.channel is None else self.channel}
         return result
 
 
@@ -54,7 +54,7 @@ class FFZEmotes(Resource):
             for emote in emotes:
                 url = "https:{}".format(emote["urls"]["1"])
                 response[emote["name"]] = {"url": url, "src": "ffz",
-                                           "scope": "global" if self.channel is None else "channel"}
+                                           "channel": "" if self.channel is None else self.channel}
         return response
 
 
@@ -78,7 +78,7 @@ class TwitchBadges(Resource):
                 for version in versions:
                     url = versions[version]["image_url_1x"]
                     name = "{}/{}".format(badge, version)
-                    new_resource[name] = {"url": url, "src": "twitch", "scope": "global"}
+                    new_resource[name] = {"url": url, "src": "twitch", "channel": ""}
             return new_resource
         else:
             if self.channel not in self.channel_ids.ids:
@@ -97,8 +97,7 @@ class TwitchBadges(Resource):
             for version in versions:
                 url = versions[version]["image_url_1x"]
                 name = "{}/{}".format(self.channel.lower(), version)
-                new_resource[name] = {"url": url, "src": "twitch",
-                                      "scope": "channel"}
+                new_resource[name] = {"url": url, "src": "twitch", "channel": self.channel}
             return new_resource
 
 
